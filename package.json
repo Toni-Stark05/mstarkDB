@@ -1,0 +1,16 @@
+{
+  "name": "mstark-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start.js",
+  "type": "modul",
+  "scripts": {
+    "start": "node start.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Toni__Stark_",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -60,6 +60,34 @@ export async function removeCatalog(name){
     }
 }
 
+export async function addObj(catalog, obj){
+    try{
+        if(!fs.existsSync(`./data/${catalog}.json`)) return {status: 'ERROR', discription: 'catalog not found'};
+        const ctl = JSON.parse(
+            fs.readFileSync(`./data/${catalog}.json`, "utf-8", (err) => {
+                if(err) throw err; 
+        }));
+
+        ctl.objects.push(obj);
+
+        fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`, (err) => {
+            if(err) throw err;
+        })
+
+        return {status: 'OK'};
+    } catch(err){
+        console.log('Error: ', err);
+    }
+}
+
+export async function catalogsLs(){
+    let files = [];
+    fs.readdirSync('./data/').forEach(file => {
+        if(file != '_structure.json') files.push(file);
+    });
+    return files;
+}
+
 async function crStructure(structure_json){
     try{
         fs.writeFileSync('./data/_structure.json', structure_json, (err) => {

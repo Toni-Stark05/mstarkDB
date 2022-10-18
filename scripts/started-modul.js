@@ -15,9 +15,15 @@ export function startDB(app, setting){
             res.send(`Data base --- ${setting.name} <br> DB work from http://localhost:${PORT}`);
         })
     
-        app.get('/setting', (req, res) => {
+        app.get('/setting', (req, res) =>{
             let settingJSON = JSON.stringify({name: NAME, port: PORT});
             res.send(settingJSON);
+        })
+
+        app.get('/catalog-ls', (req, res) =>{
+            fsystem.catalogsLs().then(response => {
+                res.send(response);
+            })
         })
 
         app.post('/add-catalog', (req, res) =>{
@@ -29,9 +35,27 @@ export function startDB(app, setting){
         })
 
         app.post('/remove-catalog', (req, res) =>{
-            let name = req.body.name
+            let name = req.body.name;
             
             fsystem.removeCatalog(name).then(response =>{
+                res.send(response);
+            })
+        })
+
+        app.post('/add-obj', (req, res) =>{
+            let catalog = req.body.catalog;
+            let obj = req.body.obj;
+            
+            fsystem.addObj(catalog, obj).then(response =>{
+                res.send(response);
+            })
+        })
+
+        app.post('/remove-obj', (req, res) =>{
+            let catalog = req.body.catalog;
+            let obj = req.body.obj;
+            
+            fsystem.removeObj(catalog, obj).then(response =>{
                 res.send(response);
             })
         })

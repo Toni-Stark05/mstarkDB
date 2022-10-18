@@ -1,6 +1,5 @@
 import bp from 'body-parser';
-import { response } from 'express';
-import { fileSystem, addCatalog } from './file-system.js';
+import * as fsystem from './file-system.js';
 
 export function startDB(app, setting){
     try{
@@ -10,7 +9,7 @@ export function startDB(app, setting){
         app.use(bp.urlencoded({ extended: true }));
         app.listen(PORT);
         console.log(`DB work from http://localhost:${PORT}`);
-        fileSystem(setting.name);
+        fsystem.fileSystem(setting.name);
 
         app.get('/', (req, res) =>{
             res.send(`Data base --- ${setting.name} <br> DB work from http://localhost:${PORT}`);
@@ -24,7 +23,15 @@ export function startDB(app, setting){
         app.post('/add-catalog', (req, res) =>{
             let name = req.body.name
             
-            addCatalog(name).then(response =>{
+            fsystem.addCatalog(name).then(response =>{
+                res.send(response);
+            })
+        })
+
+        app.post('/remove-catalog', (req, res) =>{
+            let name = req.body.name
+            
+            fsystem.removeCatalog(name).then(response =>{
                 res.send(response);
             })
         })

@@ -1,29 +1,67 @@
 import fs from 'fs';
+import * as uuid from 'uuid';
 
-let structure_json = '{}';
-function crStructure(){
-    fs.writeFile("./data/structure.json", structure_json, (err) => {
-        if (err) throw err;
-    });
+
+export async function addCatalog(name){
+    try{
+        const structure = JSON.parse(
+            fs.readFileSync('./data/_structure.json', "utf-8", (err) => {
+                if(err) throw err; 
+        }));
+    
+        for (let index = 0; index < structure.Catalogs.length; index++) {
+            let element = structure.Catalogs[index];
+            if(name == element){
+                return {status: 'ERROR', discription: 'A directory with this name already exists'}
+            }
+        }
+        let id = uuid.v4();
+        let obj = `{"id":"${id}", "objects": []}`;
+        structure.Catalogs.push(name);
+        fs.writeFileSync('./data/_structure.json', `${JSON.stringify(structure)}`, (err) => {
+            if(err) throw err;
+        })
+        fs.writeFileSync(`./data/${name}.json`, obj, (err) => {
+            if(err) throw err;
+        })
+        return {status: "OK"};
+    } catch(err){
+        console.log('Error: ',err);
+    }
 }
 
-export function fileSystem(){
+
+async function crStructure(structure_json){
+    try{
+        fs.writeFileSync('./data/_structure.json', structure_json, (err) => {
+            if (err) throw err;
+        });
+    } catch(err){
+        console.log('Error: ',err);
+    }
+}
+
+
+export async function fileSystem(db_name){
     try {
+        let structure_json = `{"name": "${db_name}", "Catalogs": []}`;
         if (fs.existsSync('./data')) {
-            if(fs.existsSync('./data/structure.json')){
+            if(fs.existsSync('./data/_structure.json')){
             }
             else{
-                crStructure();
+                
+                crStructure(structure_json);
             }
         } 
         else {
             fs.mkdir('data', err => {
                 if(err) throw err; 
             });
-            crStructure();
+            await crStructure(structure_json);
         }
 
         console.log('The file system is ready to work');
+        console.log('OK');
     } 
     catch(err) {
         console.error(err)

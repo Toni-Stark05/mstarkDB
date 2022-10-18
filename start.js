@@ -1,6 +1,6 @@
-import Express from "express";
-import fs from "fs";
-import * as db from "./scripts/started-modul.js"
+import Express from 'express';
+import fs from 'fs';
+import * as db from './scripts/started-modul.js';
 
 const app = Express();
 

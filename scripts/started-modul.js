@@ -13,56 +13,58 @@ export function startDB(app, setting){
 
         app.get('/', (req, res) =>{
             res.send(`Data base --- ${setting.name} <br> DB work from http://localhost:${PORT}`);
-        })
+        });
     
         app.get('/setting', (req, res) =>{
             let settingJSON = JSON.stringify({name: NAME, port: PORT});
             res.send(settingJSON);
-        })
+        });
 
         app.get('/catalog-ls', (req, res) =>{
             fsystem.catalogsLs().then(response => {
                 res.send(response);
-            })
-        })
+            });
+        });
 
         app.post('/add-catalog', (req, res) =>{
-            let name = req.body.name
-            
+            let name = req.body.name;
             fsystem.addCatalog(name).then(response =>{
                 res.send(response);
-            })
-        })
+            });
+        });
 
         app.post('/remove-catalog', (req, res) =>{
             let name = req.body.name;
-            
             fsystem.removeCatalog(name).then(response =>{
                 res.send(response);
-            })
-        })
+            });
+        });
 
         app.post('/add-obj', (req, res) =>{
             let catalog = req.body.catalog;
             let obj = req.body.obj;
-            
             fsystem.addObj(catalog, obj).then(response =>{
                 res.send(response);
-            })
-        })
+            });
+        });
+
+        app.post('/search-obj', (req, res) =>{
+            let catalog = req.body.catalog;
+            let keys = req.body.keys;
+            fsystem.searchObj(catalog, keys).then(response =>{
+                res.send(response);
+            });
+        });
 
         app.post('/remove-obj', (req, res) =>{
             let catalog = req.body.catalog;
             let obj = req.body.obj;
-            
             fsystem.removeObj(catalog, obj).then(response =>{
                 res.send(response);
-            })
-        })
+            });
+        });
 
     } catch(err){
-        console.log('Error: ',err);
-    }
- 
-
-}
+        console.error(err);
+    };
+};

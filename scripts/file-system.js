@@ -1,6 +1,16 @@
 import fs from 'fs';
 import * as uuid from 'uuid';
 
+async function crStructure(structure_json){
+    try{
+        fs.writeFileSync('./data/_structure.json', structure_json, (err) => {
+            if (err) throw err;
+        });
+    } catch(err){
+        console.error(err);
+    };
+};
+
 
 export async function addCatalog(name){
     try{
@@ -24,16 +34,14 @@ export async function addCatalog(name){
         })
         return {status: "OK"};
     } catch(err){
-        console.log('Error: ',err);
-    }
-}
+        console.error(err);
+    };
+};
 
 export async function removeCatalog(name){
     try{
-        if(!fs.existsSync(`./data/${name}.json`)){
-            return {status: 'ERROR', discription: 'A directory with this name was not found'};
-        }
-
+        if(!fs.existsSync(`./data/${name}.json`)) return {status: 'ERROR', discription: 'A directory with this name was not found'};
+        
         const structure = JSON.parse(
             fs.readFileSync('./data/_structure.json', "utf-8", (err) => {
                 if(err) throw err; 
@@ -44,9 +52,9 @@ export async function removeCatalog(name){
             if(name == element){
                 structure.Catalogs.splice(index, 1);
                 break;
-            } 
+            }; 
 
-        }
+        };
 
         fs.writeFileSync('./data/_structure.json', `${JSON.stringify(structure)}`, (err) => {
             if(err) throw err;
@@ -56,9 +64,9 @@ export async function removeCatalog(name){
         })
         return {status: "OK"};
     } catch(err){
-        console.log('Error: ', err);
-    }
-}
+        console.error(err);
+    };
+};
 
 export async function addObj(catalog, obj){
     try{
@@ -72,32 +80,55 @@ export async function addObj(catalog, obj){
 
         fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`, (err) => {
             if(err) throw err;
-        })
+        });
 
         return {status: 'OK'};
     } catch(err){
-        console.log('Error: ', err);
-    }
-}
+        console.error(err);
+    };
+};
 
 export async function catalogsLs(){
-    let files = [];
-    fs.readdirSync('./data/').forEach(file => {
-        if(file != '_structure.json') files.push(file);
-    });
-    return files;
-}
-
-async function crStructure(structure_json){
     try{
-        fs.writeFileSync('./data/_structure.json', structure_json, (err) => {
-            if (err) throw err;
+        let files = [];
+        fs.readdirSync('./data/').forEach(file => {
+            if(file != '_structure.json') files.push(file);
         });
-    } catch(err){
-        console.log('Error: ',err);
-    }
-}
+    return files;
+    }catch(err){
+        console.error(err);
+    };
+};
 
+export async function searchObj(catalog, keys){
+    try{
+
+    }catch(err){
+        console.error(err);
+    };
+
+    if(!fs.existsSync(`./data/${catalog}.json`)) return {status: 'ERROR', discription: 'catalog not found'};
+    const ctl = JSON.parse(
+        fs.readFileSync(`./data/${catalog}.json`, "utf-8", (err) => {
+            if(err) throw err; 
+    }));
+
+    let response = [];
+
+    for (let index = 0; index < ctl.objects.length; index++) {
+        let objectsArr = Object.keys(ctl.objects[index]);
+        for(let j = 0; j < objectsArr.length; j++){
+            let keysArr = Object.keys(keys);
+            for(let n = 0; n < keysArr.length; j++){
+                if(objectsArr[j] == keysArr[n]){
+                    response.push(ctl.objects[index]);
+                }
+            }
+        }
+    }
+
+    return response;
+};
 
 export async function fileSystem(db_name){
     try {
@@ -108,19 +139,19 @@ export async function fileSystem(db_name){
             else{
                 
                 crStructure(structure_json);
-            }
+            };
         } 
         else {
             fs.mkdir('data', err => {
                 if(err) throw err; 
             });
             await crStructure(structure_json);
-        }
+        };
 
         console.log('The file system is ready to work');
         console.log('OK');
     } 
     catch(err) {
-        console.error(err)
-    }
-}
+        console.error(err);
+    };
+};

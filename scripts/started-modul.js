@@ -48,10 +48,19 @@ export function startDB(app, setting){
             });
         });
 
-        app.post('/search-obj', (req, res) =>{
+        app.post('/search-obj-keys', (req, res) =>{
             let catalog = req.body.catalog;
             let keys = req.body.keys;
-            fsystem.searchObj(catalog, keys).then(response =>{
+            fsystem.searchObjKeys(catalog, keys).then(response =>{
+                res.send(response);
+            });
+        });
+
+        app.post('/search-obj-keys-and-value', (req, res) =>{
+            let catalog = req.body.catalog;
+            let keys = req.body.keys;
+            let value = req.body.value;
+            fsystem.searchObjVelue(catalog, keys, value).then(response =>{
                 res.send(response);
             });
         });

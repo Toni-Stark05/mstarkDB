@@ -82,7 +82,7 @@ export async function addObj(catalog, obj){
             if(err) throw err;
         });
 
-        return {status: 'OK'};
+        return {status: '200'};
     } catch(err){
         console.error(err);
     };
@@ -100,7 +100,7 @@ export async function catalogsLs(){
     };
 };
 
-export async function searchObj(catalog, keys){
+export async function searchObjKeys(catalog, keys){
     try{
 
     }catch(err){
@@ -112,20 +112,32 @@ export async function searchObj(catalog, keys){
         fs.readFileSync(`./data/${catalog}.json`, "utf-8", (err) => {
             if(err) throw err; 
     }));
-
     let response = [];
-
-    for (let index = 0; index < ctl.objects.length; index++) {
-        let objectsArr = Object.keys(ctl.objects[index]);
-        for(let j = 0; j < objectsArr.length; j++){
-            let keysArr = Object.keys(keys);
-            for(let n = 0; n < keysArr.length; j++){
-                if(objectsArr[j] == keysArr[n]){
-                    response.push(ctl.objects[index]);
-                }
-            }
-        }
+    for(let i = 0; i < ctl.objects.length; i++){
+        if(ctl.objects[i][keys] != undefined) response.push(ctl.objects[i]);
     }
+    if(response[0] == undefined) return {status: 'ERROR', discription: 'keys not found'};
+
+    return response;
+};
+
+export async function searchObjVelue(catalog, keys, value){
+    try{
+
+    }catch(err){
+        console.error(err);
+    };
+
+    if(!fs.existsSync(`./data/${catalog}.json`)) return {status: 'ERROR', discription: 'catalog not found'};
+    const ctl = JSON.parse(
+        fs.readFileSync(`./data/${catalog}.json`, "utf-8", (err) => {
+            if(err) throw err; 
+    }));
+    let response = [];
+    for(let i = 0; i < ctl.objects.length; i++){
+        if(ctl.objects[i][keys] == value) response.push(ctl.objects[i]);
+    }
+    if(response[0] == undefined) return {status: '204', discription: 'No Content'};
 
     return response;
 };

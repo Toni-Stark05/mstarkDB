@@ -2,16 +2,27 @@
   "name": "mstark-db",
   "version": "1.0.0",
   "description": "",
-  "main": "start.js",
+  "main": "main.js",
   "type": "module",
   "scripts": {
-    "start": "node start.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/main.js"
   },
   "author": "Toni__Stark_",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "eslint": "^8.29.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
   }
 }

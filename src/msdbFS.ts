@@ -4,9 +4,9 @@ import { structureDB, catalog } from './interface.js'
 
 // local functions
 
-function genStructure(): void {
+function genStructure(name: string): void {
   let structureDB: structureDB = {
-    name: 'test',
+    name: `${name}`,
     catalogs: [],
   }
   let structureJSON: any = JSON.stringify(structureDB)
@@ -18,9 +18,9 @@ function genStructure(): void {
 
 // export functions
 
-export function filesCheck(): void {
+export function filesCheck(name: string): void {
   if (!fs.existsSync('./data') || !fs.existsSync('./data/_structure.json')) {
-    genStructure()
+    genStructure(name)
   }
 }
 

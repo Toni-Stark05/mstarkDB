@@ -10,7 +10,7 @@ export function database(app: any, setting: settingDB) {
   app.listen(PORT)
   console.log(`DB work from http://localhost:${PORT}`)
 
-  mfs.filesCheck()
+  mfs.filesCheck(setting.name)
 
   app.get('/', (req: any, res: any): void => {
     res.send(`Data base --- ${NAME} <br> DB work from http://localhost:${PORT}`)

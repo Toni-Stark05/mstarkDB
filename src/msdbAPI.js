@@ -7,7 +7,7 @@ export function database(app, setting) {
     app.use(bp.urlencoded({ extended: true }));
     app.listen(PORT);
     console.log(`DB work from http://localhost:${PORT}`);
-    mfs.filesCheck();
+    mfs.filesCheck(setting.name);
     app.get('/', (req, res) => {
         res.send(`Data base --- ${NAME} <br> DB work from http://localhost:${PORT}`);
     });

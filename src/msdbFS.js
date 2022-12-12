@@ -1,8 +1,8 @@
 import fs from 'fs';
 // local functions
-function genStructure() {
+function genStructure(name) {
     let structureDB = {
-        name: 'test',
+        name: `${name}`,
         catalogs: [],
     };
     let structureJSON = JSON.stringify(structureDB);
@@ -13,9 +13,9 @@ function genStructure() {
     fs.writeFileSync('./data/_structure.json', structureJSON);
 }
 // export functions
-export function filesCheck() {
+export function filesCheck(name) {
     if (!fs.existsSync('./data') || !fs.existsSync('./data/_structure.json')) {
-        genStructure();
+        genStructure(name);
     }
 }
 export async function catalogsLs() {

@@ -12,6 +12,30 @@ function genStructure(name) {
     });
     fs.writeFileSync('./data/_structure.json', structureJSON);
 }
+function isEqual(object1, object2) {
+    const props1 = Object.getOwnPropertyNames(object1);
+    const props2 = Object.getOwnPropertyNames(object2);
+    if (props1.length !== props2.length) {
+        return false;
+    }
+    for (let i = 0; i < props1.length; i += 1) {
+        const prop = props1[i];
+        if (object1[prop] !== object2[prop]) {
+            return false;
+        }
+    }
+    return true;
+}
+function deleteObject(objects, objectDell) {
+    for (let i = 0; i < objects.length; i++) {
+        //console.log(objects[i], objectDell)
+        if (isEqual(objects[i], objectDell)) {
+            objects.splice(i, 1);
+            break;
+        }
+    }
+    return objects;
+}
 // export functions
 export function filesCheck(name) {
     if (!fs.existsSync('./data') || !fs.existsSync('./data/_structure.json')) {
@@ -96,6 +120,60 @@ export async function addObj(catalog, obj) {
         console.error(e);
     }
 }
+export async function removeObj(catalog, obj) {
+    try {
+        if (!fs.existsSync(`./data/${catalog}.json`))
+            return { status: 'ERROR', discription: 'catalog not found' };
+        const ctl = await JSON.parse(fs.readFileSync(`./data/${catalog}.json`, 'utf-8'));
+        let objArr = ctl.objects;
+        let check = false;
+        for (let i = 0; i < objArr.length; i++) {
+            if (isEqual(objArr[i], obj)) {
+                objArr.splice(i);
+                check = true;
+            }
+        }
+        if (check) {
+            ctl.objects = objArr;
+            fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`);
+            return {
+                status: 200,
+            };
+        }
+        else {
+            return { status: 'ERROR', discription: 'object not found' };
+        }
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+export async function removeObjVelue(catalog, keys, value) {
+    try {
+        const ctl = await JSON.parse(fs.readFileSync(`./data/${catalog}.json`, 'utf-8'));
+        let objArr = [];
+        for (let i = 0; i < ctl.objects.length; i++) {
+            if (ctl.objects[i][keys] == value) {
+                objArr.push(ctl.objects[i]);
+            }
+        }
+        if (objArr.length) {
+            for (let i = 0; i < objArr.length; i++) {
+                ctl.objects = deleteObject(ctl.objects, objArr[i]);
+            }
+            fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`);
+            return {
+                status: 200,
+            };
+        }
+        else {
+            return { status: 'ERROR', discription: 'object not found' };
+        }
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
 export async function searchObjKeys(catalog, keys) {
     try {
         if (!fs.existsSync(`./data/${catalog}.json`))
@@ -125,7 +203,7 @@ export async function searchObjVelue(catalog, keys, value) {
         const ctl = await JSON.parse(fs.readFileSync(`./data/${catalog}.json`, 'utf-8'));
         let response = [];
         for (let i = 0; i < ctl.objects.length; i++) {
-            if (ctl.objects[i][keys] == value)
+            if (ctl.objects[i][keys] === value)
                 response.push(ctl.objects[i]);
         }
         if (response[0] == undefined)

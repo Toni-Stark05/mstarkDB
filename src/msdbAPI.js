@@ -35,15 +35,21 @@ export function database(app, setting) {
             res.send(response);
         });
     });
-    /*
-    app.post('/remove-obj', (req: any, res: any) => {
-      let catalog = req.body.catalog
-      let obj = req.body.obj
-      mfs.removeObj(catalog, obj).then((response) => {
-        res.send(response)
-      })
-    })
-    */
+    app.post('/remove-obj', (req, res) => {
+        let catalog = req.body.catalog;
+        let obj = req.body.obj;
+        mfs.removeObj(catalog, obj).then((response) => {
+            res.send(response);
+        });
+    });
+    app.post('/remove-obj-keys-and-value', (req, res) => {
+        let catalog = req.body.catalog;
+        let keys = req.body.keys;
+        let value = req.body.value;
+        mfs.removeObjVelue(catalog, keys, value).then((response) => {
+            res.send(response);
+        });
+    });
     app.post('/search-obj-keys', (req, res) => {
         let catalog = req.body.catalog;
         let keys = req.body.keys;

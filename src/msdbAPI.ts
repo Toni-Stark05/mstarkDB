@@ -52,6 +52,15 @@ export function database(app: any, setting: settingDB) {
     })
   })
 
+  app.post('/remove-obj-keys-and-value', (req: any, res: any) => {
+    let catalog = req.body.catalog
+    let keys = req.body.keys
+    let value = req.body.value
+    mfs.removeObjVelue(catalog, keys, value).then((response) => {
+      res.send(response)
+    })
+  })
+
   app.post('/search-obj-keys', (req: any, res: any) => {
     let catalog = req.body.catalog
     let keys = req.body.keys

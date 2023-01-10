@@ -35,6 +35,16 @@ function isEqual(object1: any, object2: any) {
   return true
 }
 
+function deleteObject(objects: any, objectDell: any) {
+  for (let i = 0; i < objects.length; i++) {
+    //console.log(objects[i], objectDell)
+    if (isEqual(objects[i], objectDell)) {
+      objects.splice(i, 1)
+      break
+    }
+  }
+  return objects
+}
 // export functions
 
 export function filesCheck(name: string): void {
@@ -152,19 +162,52 @@ export async function removeObj(catalog: string, obj: any) {
     )
 
     let objArr: any = ctl.objects
-    let chek: boolean = false
+    let check: boolean = false
 
     for (let i = 0; i < objArr.length; i++) {
       if (isEqual(objArr[i], obj)) {
         objArr.splice(i)
-        chek = true
+        check = true
       }
     }
 
-    if (chek) {
+    if (check) {
       ctl.objects = objArr
       fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`)
 
+      return {
+        status: 200,
+      }
+    } else {
+      return { status: 'ERROR', discription: 'object not found' }
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function removeObjVelue(
+  catalog: string,
+  keys: string,
+  value: any
+) {
+  try {
+    const ctl = await JSON.parse(
+      fs.readFileSync(`./data/${catalog}.json`, 'utf-8')
+    )
+
+    let objArr: any[] = []
+    for (let i = 0; i < ctl.objects.length; i++) {
+      if (ctl.objects[i][keys] == value) {
+        objArr.push(ctl.objects[i])
+      }
+    }
+
+    if (objArr.length) {
+      for (let i = 0; i < objArr.length; i++) {
+        ctl.objects = deleteObject(ctl.objects, objArr[i])
+      }
+      fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`)
       return {
         status: 200,
       }
@@ -220,7 +263,7 @@ export async function searchObjVelue(
     let response: any[] = []
 
     for (let i = 0; i < ctl.objects.length; i++) {
-      if (ctl.objects[i][keys] == value) response.push(ctl.objects[i])
+      if (ctl.objects[i][keys] === value) response.push(ctl.objects[i])
     }
 
     if (response[0] == undefined)

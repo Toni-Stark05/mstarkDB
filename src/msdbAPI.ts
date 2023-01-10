@@ -43,7 +43,7 @@ export function database(app: any, setting: settingDB) {
       res.send(response)
     })
   })
-  /*
+
   app.post('/remove-obj', (req: any, res: any) => {
     let catalog = req.body.catalog
     let obj = req.body.obj
@@ -51,7 +51,7 @@ export function database(app: any, setting: settingDB) {
       res.send(response)
     })
   })
-  */
+
   app.post('/search-obj-keys', (req: any, res: any) => {
     let catalog = req.body.catalog
     let keys = req.body.keys

@@ -1,7 +1,7 @@
 {
   "name": "mstark-db",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.1.2",
+  "description": "This is an author's database suitable for personal projects.",
   "main": "start.js",
   "type": "module",
   "scripts": {

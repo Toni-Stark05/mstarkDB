@@ -16,6 +16,25 @@ function genStructure(name: string): void {
   fs.writeFileSync('./data/_structure.json', structureJSON)
 }
 
+function isEqual(object1: any, object2: any) {
+  const props1 = Object.getOwnPropertyNames(object1)
+  const props2 = Object.getOwnPropertyNames(object2)
+
+  if (props1.length !== props2.length) {
+    return false
+  }
+
+  for (let i = 0; i < props1.length; i += 1) {
+    const prop = props1[i]
+
+    if (object1[prop] !== object2[prop]) {
+      return false
+    }
+  }
+
+  return true
+}
+
 // export functions
 
 export function filesCheck(name: string): void {
@@ -117,6 +136,40 @@ export async function addObj(catalog: string, obj: any) {
 
     return {
       status: 200,
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export async function removeObj(catalog: string, obj: any) {
+  try {
+    if (!fs.existsSync(`./data/${catalog}.json`))
+      return { status: 'ERROR', discription: 'catalog not found' }
+
+    const ctl: catalog = await JSON.parse(
+      fs.readFileSync(`./data/${catalog}.json`, 'utf-8')
+    )
+
+    let objArr: any = ctl.objects
+    let chek: boolean = false
+
+    for (let i = 0; i < objArr.length; i++) {
+      if (isEqual(objArr[i], obj)) {
+        objArr.splice(i)
+        chek = true
+      }
+    }
+
+    if (chek) {
+      ctl.objects = objArr
+      fs.writeFileSync(`./data/${catalog}.json`, `${JSON.stringify(ctl)}`)
+
+      return {
+        status: 200,
+      }
+    } else {
+      return { status: 'ERROR', discription: 'object not found' }
     }
   } catch (e) {
     console.error(e)
